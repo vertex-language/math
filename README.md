@@ -1,17 +1,12 @@
 # math
 
-Numeric primitives for Vertex.
+[![package: vs-package](https://img.shields.io/badge/package-vs--package-f4f4f5?style=flat-square&labelColor=e4e4e7&color=18181b)](https://github.com/vertex-language)
+[![math: float32 | big](https://img.shields.io/badge/math-float32%20%7C%20big-f4f4f5?style=flat-square&labelColor=e4e4e7&color=18181b)](https://github.com/vertex-language/math)
 
-- **`math`**: elementary functions in pure Vertex, for the host and for
-  kernels alike. A GPU has no libm, so these are the functions a kernel
-  calls. Because nothing here calls a C library or a device's approximate
-  instruction, the same call gives the same bits on every device that
-  keeps subnormals. Apple's GPUs flush float32 subnormals to zero, and
-  that is the only difference `tests/math/device.vs` finds there.
-- **`math/big`**: unsigned arbitrary-precision integers (`Nat`): compare,
-  add/sub/mul, division with remainder, and modular exponentiation
-  (`ExpMod`). Enough for RSA public-key operations and signature
-  verification.
+Numeric primitives: elementary floating-point math functions for host and device execution, and arbitrary-precision integer arithmetic.
+
+- **`math`**: elementary functions for the host and for kernels alike. A GPU has no libm, so these are the functions a kernel calls. Because nothing here calls a C library or a device's approximate instruction, the same call gives the same bits on every device that keeps subnormals.
+- **`math/big`**: unsigned arbitrary-precision integers (`Nat`): compare, add/sub/mul, division with remainder, and modular exponentiation (`ExpMod`). Suitable for cryptographic operations and precision calculations.
 
 ## `math`, float32
 
@@ -40,9 +35,28 @@ Also: `Sqrt` and `Rsqrt`; `Floor`, `Ceil`, `Trunc`, `Round`, `Abs`,
 
 Not yet: `Pow`, `Atan`/`Atan2`, the inverse trig and hyperbolic functions,
 the float64 versions, and argument reduction for `Sin` and `Cos` beyond
-about 12,000 (Payne–Hanek).
+---
 
-```sh
-vsc run -P ~/Desktop tests/math/main.vs      # accuracy against libm
-vsc run -P ~/Desktop tests/math/device.vs    # every device against the host
+## Quick Start
+
+Run any entry point with:
+
+```bash
+vsc run main.vs
 ```
+
+### Verification & Testing
+
+```bash
+# Accuracy against libm
+vsc run tests/math/main.vs
+
+# Device tests across available accelerators
+vsc run tests/math/device.vs
+```
+
+---
+
+## License
+
+[MIT](LICENSE)
