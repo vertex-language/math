@@ -231,6 +231,61 @@ package math
 /// Tan is the tangent of x radians.
 @inlinable public func Tan(_ x: float32) -> float32 { return Sin(x) / Cos(x) }
 
+/// Atan is the arctangent of x, in (-π/2, π/2): Cephes' atanf, x reduced
+/// to |x| ≤ tan(π/8) by tan(π/8) and tan(3π/8), then a degree-9 odd
+/// polynomial.
+@inlinable public func Atan(_ x: float32) -> float32 {
+    if x.isNaN { return x }
+    var a = x < 0 ? -x : x
+    var base: float32 = 0
+    if a > 2.414213562373095 {
+        base = 1.5707963267948966
+        a = -1 / a
+    } else if a > 0.4142135623730950 {
+        base = 0.7853981633974483
+        a = (a - 1) / (a + 1)
+    }
+    let z = a * a
+    var p: float32 = 8.05374449538e-2
+    p = p * z - 1.38776856032e-1
+    p = p * z + 1.99777106478e-1
+    p = p * z - 3.33329491539e-1
+    let r = base + (p * z * a + a)
+    return x < 0 ? -r : r
+}
+
+/// Atan2 is the angle of the point (x, y) from the positive x axis, in
+/// [-π, π], with C's signed zeros: Atan2(+0, -1) is π and Atan2(-0, -1)
+/// is -π, the angle PyTorch's torch.angle gives a real negative number.
+@inlinable public func Atan2(_ y: float32, _ x: float32) -> float32 {
+    if x.isNaN || y.isNaN { return x + y }
+    let yNeg = (y.bitPattern >> 31) != 0
+    let xNeg = (x.bitPattern >> 31) != 0
+    if y == 0 {
+        if xNeg { return yNeg ? -3.1415926535897932 : 3.1415926535897932 }
+        return y  // ±0
+    }
+    if x == 0 {
+        return yNeg ? -1.5707963267948966 : 1.5707963267948966
+    }
+    if x.isInfinite {
+        if y.isInfinite {
+            let q: float32 = xNeg ? 2.356194490192345 : 0.7853981633974483
+            return yNeg ? -q : q
+        }
+        if xNeg { return yNeg ? -3.1415926535897932 : 3.1415926535897932 }
+        return yNeg ? -0.0 : 0.0
+    }
+    if y.isInfinite {
+        return yNeg ? -1.5707963267948966 : 1.5707963267948966
+    }
+    let r = Atan(y / x)
+    if !xNeg { return r }
+    // r is in (-π/2, π/2); half of π, added twice, keeps the sum's
+    // rounding to the float32 of π's.
+    return yNeg ? (r - 1.5707963267948966) - 1.5707963267948966 : (r + 1.5707963267948966) + 1.5707963267948966
+}
+
 // ---- the functions activations are made of ----
 
 /// Tanh is the hyperbolic tangent.

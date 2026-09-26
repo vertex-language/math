@@ -26,6 +26,8 @@ in units in the last place of the float32 result (`cmd/test-math`):
 | `Sin`, `Cos` | [-12000, 12000] | 2.4 |
 | `Tan` | [-1.5, 1.5] | 2.7 |
 | `Tanh` | [-10, 10] | 1.2 |
+| `Atan` | [-1e6, 1e6] | 2.7 |
+| `Atan2` | the plane, with C's signed zeros and infinities | 3.0 |
 | `Erf` | [-5, 5] | 2.4 |
 | `Erfc` | [1, 9] | 3.9 |
 | `Sigmoid` | [-80, 80] | 2.2 |
@@ -33,19 +35,13 @@ in units in the last place of the float32 result (`cmd/test-math`):
 Also: `Sqrt` and `Rsqrt`; `Floor`, `Ceil`, `Trunc`, `Round`, `Abs`,
 `CopySign`, `Min` and `Max`; `Ldexp` and `Frexp`.
 
-Not yet: `Pow`, `Atan`/`Atan2`, the inverse trig and hyperbolic functions,
+Not yet: `Pow`, `Asin`/`Acos`, the other inverse trig and hyperbolic functions,
 the float64 versions, and argument reduction for `Sin` and `Cos` beyond
 ---
 
 ## Quick Start
 
-Run any entry point with:
-
-```bash
-vsc run main.vs
-```
-
-### Verification & Testing
+Run verification and tests in `cmd/` directly with `vsc run`:
 
 ```bash
 # Accuracy against libm
@@ -53,6 +49,9 @@ vsc run test-math
 
 # Device tests across available accelerators
 vsc run test-math-device
+
+# Multi-precision integer arithmetic
+vsc run test-big
 ```
 
 ---

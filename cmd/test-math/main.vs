@@ -12,6 +12,8 @@ import "math"
 @_silgen_name("cos") func cCos(_ x: float64) -> float64
 @_silgen_name("tan") func cTan(_ x: float64) -> float64
 @_silgen_name("tanh") func cTanh(_ x: float64) -> float64
+@_silgen_name("atan") func cAtan(_ x: float64) -> float64
+@_silgen_name("atan2") func cAtan2(_ y: float64, _ x: float64) -> float64
 @_silgen_name("erf") func cErf(_ x: float64) -> float64
 @_silgen_name("erfc") func cErfc(_ x: float64) -> float64
 
@@ -63,6 +65,28 @@ check("Sin small", -3.2, 3.2, 2, { math.Sin($0) }, { cSin($0) })
 check("Cos", -12000, 12000, 3, { math.Cos($0) }, { cCos($0) })
 check("Tan", -1.5, 1.5, 4, { math.Tan($0) }, { cTan($0) })
 check("Tanh", -10, 10, 3, { math.Tanh($0) }, { cTanh($0) })
+check("Atan", -1e6, 1e6, 3, { math.Atan($0) }, { cAtan($0) })
+check("Atan small", -3, 3, 3, { math.Atan($0) }, { cAtan($0) })
+do {
+    // Atan2 over the plane, and at its signed zeros and infinities.
+    var worst: float64 = 0
+    for i in 0..<200000 {
+        let y = float32((next() * 2 - 1) * (i % 2 == 0 ? 10 : 1e4))
+        let x = float32((next() * 2 - 1) * (i % 3 == 0 ? 10 : 1e4))
+        worst = max(worst, ulps(math.Atan2(y, x), cAtan2(float64(y), float64(x))))
+    }
+    var edges = true
+    let specials: [float32] = [0, -0.0, 1, -1, float32.infinity, -float32.infinity]
+    for y in specials {
+        for x in specials {
+            let got = math.Atan2(y, x), want = float32(cAtan2(float64(y), float64(x)))
+            if got.bitPattern != want.bitPattern { edges = false; print("      Atan2(\(y), \(x)) = \(got), want \(want)") }
+        }
+    }
+    let ok = worst <= 4 && edges
+    if !ok { failures += 1 }
+    print("\(ok ? "ok  " : "FAIL") Atan2: worst \(worst) ULPs over the plane; signed zeros and infinities as C's")
+}
 check("Erf", -5, 5, 4, { math.Erf($0) }, { cErf($0) })
 check("Erfc", 1, 9, 8, { math.Erfc($0) }, { cErfc($0) })
 check("Sigmoid", -80, 80, 4, { math.Sigmoid($0) }, { 1 / (1 + cExp(-$0)) })

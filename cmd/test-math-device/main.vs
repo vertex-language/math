@@ -1,8 +1,10 @@
 // math inside kernels: every function, on every device, gives the host's
 // bits exactly -- the point of writing it in Vertex rather than calling a
 // device's approximate instructions.
-import "gpu"
-import "math"
+import (
+    "gpu"
+    "math"
+)
 
 func all(_ x: gpu.Span<float32>, _ out: gpu.MutableSpan<float32>) kernel {
     let i = gpu.Index.x
