@@ -14,7 +14,7 @@ Everything is `@inlinable`, so a kernel in any module compiles it into
 itself. The algorithms are Cephes' (range reduction, then a minimax
 polynomial). `Erfc`'s tail is fitted here at Chebyshev nodes. Errors are
 the worst over 200,000 arguments against the host's double-precision libm,
-in units in the last place of the float32 result (`tests/math/main.vs`):
+in units in the last place of the float32 result (`cmd/test-math`):
 
 | Function | Range tested | Worst |
 | --- | --- | --- |
@@ -49,10 +49,10 @@ vsc run main.vs
 
 ```bash
 # Accuracy against libm
-vsc run tests/math/main.vs
+vsc run test-math
 
 # Device tests across available accelerators
-vsc run tests/math/device.vs
+vsc run test-math-device
 ```
 
 ---
