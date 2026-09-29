@@ -10,6 +10,7 @@ call gives the same bits on every machine.
 
 - **`math`**: `Sin`, `Exp`, `Log`, `Pow` and the rest, overloaded for `float32` and `float64` (the argument's type picks one); `Clamp`, `Lerp`, `Saturate`, `FloorDiv`, `FloorMod`, `CeilDiv`, `RoundToInt`; the constants `Pi`, `E`, `Ln2`, `Ln10`, `Log2E`, `Log10E`, `Sqrt2`, `SqrtHalf`.
 - **`math/big`**: `Nat`, unsigned, and `Integer`, signed: add, subtract, multiply, divide (Knuth's algorithm D), powers, shifts, the bitwise operations on two's complement, text in any radix from 2 to 36, and exact conversion to and from `float64`. `ExpMod` for RSA.
+- **`math/rand`**: fast, reproducible pseudo-random generators for simulations, tests and shuffles (secrets use `crypto/rand`): `SplitMix64`, and `Xorshift128Plus` with `Float64` in [0, 1) and unbiased `Below(n)`. It is the generator V8 uses for `Math.random`.
 
 ---
 
