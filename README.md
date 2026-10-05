@@ -42,9 +42,11 @@ units in the last place of the float32 result (`cmd/test-math`):
 Also: `Sqrt` and `Rsqrt`; `Floor`, `Ceil`, `Trunc`, `Round`, `Abs`,
 `CopySign`, `Min` and `Max`; `Ldexp` and `Frexp`.
 
-Not yet in float32: `Pow`, `Asin`/`Acos`, the other inverse trigonometric
-and hyperbolic functions, and argument reduction for `Sin` and `Cos` beyond
-12000.
+**Host only:** `Pow`, `Asin`, `Acos`, `Sinh`, `Cosh`, `Asinh`, `Acosh` and
+`Atanh` in float32 go through float64 and round once, so they are correctly
+rounded (under 0.5 ULPs in `cmd/test-math`), but a kernel can't call them:
+Metal has no float64. Float32 polynomials for kernels are still to write,
+as is argument reduction for `Sin` and `Cos` beyond 12000.
 
 ## `math`, float64: the host
 

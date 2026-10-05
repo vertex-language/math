@@ -381,3 +381,22 @@ package math
     }
     return _expNegSquare(a) * q * p
 }
+
+// The rest of the elementary functions, computed in float64 and rounded
+// once: as accurate as float32 allows, if not as fast as a float32
+// polynomial would be.
+
+/// x to the power y.
+@inlinable public func Pow(_ x: float32, _ y: float32) -> float32 { return float32(Pow(float64(x), float64(y))) }
+
+/// The arc sine, in radians; NaN outside [-1, 1].
+@inlinable public func Asin(_ x: float32) -> float32 { return float32(Asin(float64(x))) }
+
+/// The arc cosine, in radians; NaN outside [-1, 1].
+@inlinable public func Acos(_ x: float32) -> float32 { return float32(Acos(float64(x))) }
+
+@inlinable public func Sinh(_ x: float32) -> float32 { return float32(Sinh(float64(x))) }
+@inlinable public func Cosh(_ x: float32) -> float32 { return float32(Cosh(float64(x))) }
+@inlinable public func Asinh(_ x: float32) -> float32 { return float32(Asinh(float64(x))) }
+@inlinable public func Acosh(_ x: float32) -> float32 { return float32(Acosh(float64(x))) }
+@inlinable public func Atanh(_ x: float32) -> float32 { return float32(Atanh(float64(x))) }

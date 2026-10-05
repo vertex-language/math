@@ -16,6 +16,11 @@ import "math"
 @_silgen_name("atan2") func cAtan2(_ y: float64, _ x: float64) -> float64
 @_silgen_name("erf") func cErf(_ x: float64) -> float64
 @_silgen_name("erfc") func cErfc(_ x: float64) -> float64
+@_silgen_name("asin") func cAsin(_ x: float64) -> float64
+@_silgen_name("acos") func cAcos(_ x: float64) -> float64
+@_silgen_name("sinh") func cSinh(_ x: float64) -> float64
+@_silgen_name("cosh") func cCosh(_ x: float64) -> float64
+@_silgen_name("pow") func cPow(_ x: float64, _ y: float64) -> float64
 
 // ulps is how far got is from the correctly rounded float32 of want, in
 // units in its last place (the float32 spacing at want).
@@ -54,6 +59,11 @@ func check(_ name: string, _ lo: float64, _ hi: float64, _ limit: float64, _ f: 
 }
 
 check("Exp", -103, 88.7, 2, { math.Exp($0) }, { cExp($0) })
+check("Asin", -1, 1, 1, { math.Asin($0) }, { cAsin($0) })
+check("Acos", -1, 1, 1, { math.Acos($0) }, { cAcos($0) })
+check("Sinh", -80, 80, 1, { math.Sinh($0) }, { cSinh($0) })
+check("Cosh", -80, 80, 1, { math.Cosh($0) }, { cCosh($0) })
+check("Pow x^2.5", 0, 1e15, 1, { math.Pow($0, 2.5) }, { cPow($0, 2.5) })
 check("Exp small", -1, 1, 1, { math.Exp($0) }, { cExp($0) })
 check("Exp2", -149, 127.9, 2, { math.Exp2($0) }, { cExp2($0) })
 check("Log", 1e-38, 3e38, 2, { math.Log($0) }, { cLog($0) })
